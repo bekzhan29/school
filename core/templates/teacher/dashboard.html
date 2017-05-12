@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}Welcome to School!{% endblock %}
+{% block title %}Welcome to School! You are awesome Teacher!{% endblock %}
 
 {% block body %}
-    {% if user.is_authenticated %}
-        Hello, {{ user.username }}
-    {% endif %}
+    Hello, {{ user.username }}
     <a href="{% url 'core:logout' %}">Log Out</a>
 {% endblock body %}
