@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to School!{% endblock %}
+
+{% block body %}
+    Hello, {{ user.username }}
+    </br>
+    <a href="{% url 'core:logout' %}">Log Out</a>
+{% endblock body %}
