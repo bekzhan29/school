@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to School!{% endblock %}
+
+{% block body %}
+    Hello, {{ user.username }}
+    </br>
+    <a href="{% url 'core:dashboard' %}">Dashboard</a>
+    </br>
+    <a href="{% url 'core:logout' %}">Log Out</a>
+    </br>
+    <h3>Group: {{ group.name }} - {{ group.pk }} - {{ group.capacity }}</h3>
+    <h3>Day: {{ day }} </h3>
+    <h3>Credits Left: {{ enrolled.credits }}</h3>
+    <h3>Registration Date: {{ enrolled.registration_date }}</h3>
+    <h3>Teachers:</h3>
+    {% for teacher in teachers %}
+        <b>{{ teacher.user.username }}</b>
+    {% endfor %}
+{% endblock body %}

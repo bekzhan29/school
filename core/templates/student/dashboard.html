@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Welcome to School! You are awesome Student!{% endblock %}
+{% block title %}Welcome to School!{% endblock %}
 
 {% block body %}
     Hello, {{ user.username }}
     </br>
     <a href="{% url 'core:logout' %}">Log Out</a>
+    </br>
+    <h3>Groups:</h3>
+    {% for enrolled in enrolled_set %}
+        <a href="{% url 'core:group_pk' enrolled.group.pk %}">{{ enrolled.group.name }}</a> - {{ enrolled.credits }}
+        </br>
+    {% endfor %}
 {% endblock body %}

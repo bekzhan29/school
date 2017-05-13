@@ -3,5 +3,12 @@
 
 {% block body %}
     Hello, {{ user.username }}
+    </br>
     <a href="{% url 'core:logout' %}">Log Out</a>
+    </br>
+    <h3>Groups:</h3>
+    {% for teaches in teaches_set %}
+        <a href="{% url 'core:group_pk' teaches.group.pk %}">{{ teaches.group.name }}</a>
+        </br>
+    {% endfor %}
 {% endblock body %}

@@ -8,5 +8,8 @@ urlpatterns = [
         name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^dashboard/$', core_views.dashboard, name='dashboard'),
+    # TODO(aibeksmagulov): can we actually give the same names to urls, even if their params differ?
+    url(r'^group/(?P<pk>[0-9]+)/$', core_views.group, name='group_pk'),
+    url(r'^group/(?P<pk>[0-9]+)/day/(?P<day>[0-9]+)/$', core_views.group, name='group_pk_day'),
     url(r'^$', core_views.dashboard),
 ]

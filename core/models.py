@@ -41,9 +41,13 @@ class Enrolled(models.Model):
     group = models.ForeignKey(Group)
     registration_date = models.DateField(auto_now_add=True)
     credits = models.IntegerField(default=0)
+
     class Meta:
         verbose_name = "Enrolled"
         verbose_name_plural = "Enrolled"
+
+    def __str__(self):
+        return '@' + self.student.user.username + ' in ' + self.group.name
 
 
 class Payment(models.Model):
@@ -53,6 +57,9 @@ class Payment(models.Model):
     amount = models.IntegerField()
     # TODO(aibeksmagulov): is the following correct?
     recipient = models.ForeignKey(User)
+
+    def __str__(self):
+        return '@' + self.student.user.username + ' ' + self.group.name + ' ' + self.date_of_payment
 
 
 class Office(models.Model):
@@ -71,18 +78,28 @@ class Teaches(models.Model):
     # TODO(aibeksmagulov): add conditions for foreign keys, on_delete, on_update
     teacher = models.ForeignKey(Teacher)
     group = models.ForeignKey(Group)
+    salary = models.IntegerField(default=0)
+
     class Meta:
         verbose_name = "Teaches"
         verbose_name_plural = "Teaches"
 
+    def __str__(self):
+        return '@' + self.teacher.user.username + ' at ' + self.group.name
+
 
 class Section(models.Model):
-    teaches = models.ForeignKey(Teacher)
+    teaches = models.ForeignKey(Teaches)
     office = models.ForeignKey(Office)
     duration = models.IntegerField(default=120) # in minutes
     lesson_start = models.TimeField()
     lesson_end = models.TimeField()
-    day_of_lesson = models.CharField(max_length=1)
+    day_of_lesson = models.CharField(max_length=3)
+
+    def __str__(self):
+        return '@' + self.teaches.teacher.user.username + ' in ' + \
+               self.teaches.group.name + ' at ' + self.office.name + ' on ' + self.day_of_lesson + \
+               ' ' + self.lesson_start.isoformat() + ' - ' + self.lesson_end.isoformat()
 
 
 class Attendance(models.Model):
@@ -90,6 +107,7 @@ class Attendance(models.Model):
     teacher = models.ForeignKey(Teacher)
     section = models.ForeignKey(Section)
     date = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         verbose_name = "Attendance"
         verbose_name_plural = "Attendance"
