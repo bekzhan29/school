@@ -6,6 +6,8 @@
     </br>
     <a href="{% url 'core:logout' %}">Log Out</a>
     </br>
+    <a href="{% url 'core:attend' %}">Attend a lesson</a>
+    </br>
     <h3>Groups:</h3>
     {% for enrolled in enrolled_set %}
         <a href="{% url 'core:group_pk' enrolled.group.pk %}">{{ enrolled.group.name }}</a> - {{ enrolled.credits }}

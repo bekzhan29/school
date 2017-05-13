@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to School!{% endblock %}
+
+{% block body %}
+    Hello, {{ user.username }}
+    </br>
+    <a href="{% url 'core:dashboard' %}">Dashboard</a>
+    </br>
+    <a href="{% url 'core:logout' %}">Log Out</a>
+    </br>
+    {{ section }}
+    </br>
+    <form action="{% url 'core:attend' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Attend!</button>
+        </div>
+    </form>
+{% endblock body %}

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+import calendar
+from django.utils.timezone import localtime
 
 
 class Student(models.Model):
@@ -29,6 +31,7 @@ class Group(models.Model):
     max_capacity = models.IntegerField()
     price = models.IntegerField()
     day = models.IntegerField(default=0)
+    total_lessons = models.IntegerField(default=36) # TODO(aibeksmagulov): make migrations
 
     def __str__(self):
         return self.name
@@ -87,27 +90,49 @@ class Teaches(models.Model):
     def __str__(self):
         return '@' + self.teacher.user.username + ' at ' + self.group.name
 
-
+# TODO(aibeksmagulov): put constraints that we can not have two lessons for one teacher at
+# intersecting times, or that we can not have more than one group at the same office intersecting.
+# We can have two teachers at the same group during one time.
 class Section(models.Model):
     teaches = models.ForeignKey(Teaches)
     office = models.ForeignKey(Office)
     duration = models.IntegerField(default=120) # in minutes
     lesson_start = models.TimeField()
     lesson_end = models.TimeField()
-    day_of_lesson = models.CharField(max_length=3)
+    day_of_lesson = models.IntegerField()
 
     def __str__(self):
         return '@' + self.teaches.teacher.user.username + ' in ' + \
-               self.teaches.group.name + ' at ' + self.office.name + ' on ' + self.day_of_lesson + \
-               ' ' + self.lesson_start.isoformat() + ' - ' + self.lesson_end.isoformat()
+               self.teaches.group.name + ' at ' + self.office.name + ' on ' + \
+               calendar.day_name[self.day_of_lesson] + ' ' + self.lesson_start.isoformat() + \
+                                 ' - ' + self.lesson_end.isoformat()
 
 
-class Attendance(models.Model):
+class TeacherAttendance(models.Model):
     image_file = models.CharField(max_length=255)
     teacher = models.ForeignKey(Teacher)
     section = models.ForeignKey(Section)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Attendance"
-        verbose_name_plural = "Attendance"
+        verbose_name = "TeacherAttendance"
+        verbose_name_plural = "TeacherAttendance"
+
+    def __str__(self):
+        local = localtime(self.date).replace(tzinfo=None).strftime('%Y-%m-%d %H:%M:%S')
+        return self.section.__str__() + ' (' + local.__str__() + ')'
+
+
+class StudentAttendance(models.Model):
+    student = models.ForeignKey(Student)
+    section = models.ForeignKey(Section)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "StudentAttendance"
+        verbose_name_plural = "StudentAttendance"
+
+    def __str__(self):
+        local = localtime(self.date).replace(tzinfo=None).strftime('%Y-%m-%d %H:%M:%S')
+        # TODO(aibeksmagulov): change __str__ representation
+        return self.section.__str__() + ' (' + local.__str__() + ')'

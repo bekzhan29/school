@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Welcome to School! You are awesome Student!{% endblock %}
+
+{% block body %}
+    Hello, {{ user.username }}
+    </br>
+    <a href="{% url 'core:dashboard' %}">Dashboard</a>
+    </br>
+    <a href="{% url 'core:logout' %}">Log Out</a>
+    </br>
+    <h1>It is not yet time to check attendance!!</h1>
+{% endblock body %}
